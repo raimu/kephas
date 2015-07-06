@@ -46,3 +46,33 @@ Example:
     {
         //...
     }
+
+## Multiple services with the same contract
+If the application service contract should allow multiple registered service implementations, set the AllowMultiple option to true in the contract declaration.
+
+Example: 
+
+    [AppServiceContract(AllowMultiple = true)]
+
+Note: generic application service contracts allow multiple registrations by default, because it is expected that multiple services will be defined with different actual generic type parameters.
+
+## Composition constructor
+If an application service has only one constructor, this constructor is used for composition. If multiple constructors are defined, the constructor annotated with `[CompositionConstructor]` is used.
+
+## Composition metadata
+Application services may indicate metadata attributes that they use. The following conventions are applied:
+* The attributes must implement `IMetadataValue<TValue>`. The `Value` property will provide the value of the metadata key.
+* The attribute type without the “Attribute” suffix will be the metadata key.
+* When declaring the contract, the supported metadata attributes must be declared.
+* The attributes are applied to the service implementations.
+
+Example:
+
+    /// <summary>
+    /// Application service for request processing interception.
+    /// </summary>
+    /// <typeparam name="TRequest">The type of the request.</typeparam>
+    [AppServiceContract(AllowMultiple = true, MetadataAttributes = new[] { typeof(ProcessingPriorityAttribute) })]
+    public interface IRequestFilter<TRequest> : IRequestFilter
+    {
+    }
