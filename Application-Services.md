@@ -69,9 +69,6 @@ Example:
 
 Note: generic application service contracts allow multiple registrations by default, because it is expected that multiple services will be defined with different actual generic type parameters.
 
-## Composition constructor
-If an application service has only one constructor, this constructor is used for composition. If multiple constructors are defined, the constructor annotated with `[CompositionConstructor]` is used.
-
 ## Composition metadata
 Application services may indicate metadata attributes that they use. The following conventions are applied:
 * The attributes must implement `IMetadataValue<TValue>`. The `Value` property will provide the value of the metadata key.
