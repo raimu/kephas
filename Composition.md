@@ -19,7 +19,11 @@ The infrastructure for composition includes:
 
 How the composition infrastructure works:
 1. All the convention registrars are collected (simply all the classes implementing IConventionRegistrar) and then they are invoked to register the conventions.
+
 1. The composition container builder registers the log manager, the configuration manager, and the platform manager with factory export providers.
+
 1. The composition container builder registers all application services [link] according to their metadata provided by the [AppServiceContract] attribute.
+
 1. The composition container is built using the provided conventions.
+
 1. And last, the composition container registers itself as the service exporting ICompositionContainer.
