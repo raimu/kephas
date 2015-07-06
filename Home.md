@@ -22,3 +22,6 @@ The main challenge the software publisher faces today is the customization: the 
 * Support of a large pallete of UI components with high interactivity.
 * Minimal response times to change requests.
 * A common language with the end customer.
+
+# So, what is Kephas?
+> Kephas Framework is the software factory we built for you. To fulfill these needs, both yours and your customers'.
