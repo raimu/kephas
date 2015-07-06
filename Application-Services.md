@@ -4,4 +4,7 @@ A Kephas application uses internally all kinds of services, built-in and custom 
 > Consuming an application service implies using its contract and never its implementation.
 
 ## Aims of application services design
-* Declare the application service
+* Support metadata
+* Declare the expected behavior at the service contract level, not at the implementation level
+* Possibility to override a service implementation in a declarative way
+* Possibility to prioritize the service implementations where a collection of them should be used
