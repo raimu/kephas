@@ -18,7 +18,8 @@ The infrastructure for composition includes:
 * The class *CompositionContainerBuilderBase*, which provides a base implementation for builders of composition containers.
 
 How the composition infrastructure works:
-1. All the convention registrars are collected (simply all the classes implementing IConventionRegistrar) and then they are invoked to register the conventions.
+
+1. All the convention registrars are collected (simply all the classes implementing *IConventionRegistrar*) and then they are invoked to register the conventions.
 
 1. The composition container builder registers the log manager, the configuration manager, and the platform manager with factory export providers.
 
@@ -26,4 +27,9 @@ How the composition infrastructure works:
 
 1. The composition container is built using the provided conventions.
 
-1. And last, the composition container registers itself as the service exporting ICompositionContainer.
+1. And last, the composition container registers itself as the service exporting *ICompositionContainer*.
+
+## Recommendations:
+* There is no restriction about the number of convention registrars per assembly nor what those registrars should register. However, to keep the things under control, a registrar should not register conventions for components outside the scope of the assembly where it is defined and, also, it is recommended to have one registrar per assembly.
+* For components participating in composition, if possible, import the required services in the constructor. By using this approach it is clearly defined what is required for the component to function properly and also specific checks may be performed at the constructor level regarding imported services. However, if there are a lot of dependencies, the constructor may not be very appropriate due to an ugly signature, therefore in this case it is acceptable to use either property import or a combination of them.
+* Prefer conventions over attributes. The code becomes clearer and more concise, and the dependencies on specific IoC containers will diminish.
