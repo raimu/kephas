@@ -47,6 +47,19 @@ Example:
         //...
     }
 
+In case a new service implementation with the same contract is defined and the override priority is set to a higher value, than this service implementation will be used and the previous one will be ignored.
+
+    /// <summary>
+    /// Provides a custom implementation of the <see cref="IRequestProcessor"/> application service contract.
+    /// </summary>
+    [OverridePriority(Priority.High)]
+    public class CustomRequestProcessor : IRequestProcessor
+    {
+        //...
+    }
+
+
+
 ## Multiple services with the same contract
 If the application service contract should allow multiple registered service implementations, set the AllowMultiple option to true in the contract declaration.
 
