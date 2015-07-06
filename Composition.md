@@ -33,3 +33,8 @@ How the composition infrastructure works:
 * There is no restriction about the number of convention registrars per assembly nor what those registrars should register. However, to keep the things under control, a registrar should not register conventions for components outside the scope of the assembly where it is defined and, also, it is recommended to have one registrar per assembly.
 * For components participating in composition, if possible, import the required services in the constructor. By using this approach it is clearly defined what is required for the component to function properly and also specific checks may be performed at the constructor level regarding imported services. However, if there are a lot of dependencies, the constructor may not be very appropriate due to an ugly signature, therefore in this case it is acceptable to use either property import or a combination of them.
 * Prefer conventions over attributes. The code becomes clearer and more concise, and the dependencies on specific IoC containers will diminish.
+
+# Part configuration
+## Composition constructor
+If an application service has only one constructor, this constructor is used for composition. If multiple constructors are defined, the constructor annotated with `[CompositionConstructor]` is used.
+
