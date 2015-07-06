@@ -76,3 +76,44 @@ Example:
     public interface IRequestFilter<TRequest> : IRequestFilter
     {
     }
+
+## Generic application service contracts
+When exposing generic application service contracts, Kephas will export the parts using the generic interface, unless a `ContractType` is specified in the metadata.
+
+Example of generic export contract type:
+
+    /// <summary>
+    /// Application service for handling requests.
+    /// </summary>
+    /// <typeparam name="TRequest">The type of the request.</typeparam>
+    [AppServiceContract]
+    public interface IRequestHandler<TRequest> : IRequestHandler
+    {
+    }
+
+In this example, the request handlers are exporting using the generic IRequestHandler contract type.
+Example of the non-generic export contract type:
+
+    /// <summary>
+    /// Application service for request processing interception.
+    /// </summary>
+    public interface IRequestProcessingFilter
+    {
+    }
+
+    /// <summary>
+    /// Application service for request processing interception.
+    /// </summary>
+    /// <typeparam name="TRequest">The type of the request.</typeparam>
+    [AppServiceContract(AllowMultiple = true, 
+        MetadataAttributes = new[] { typeof(ProcessingPriorityAttribute) }, 
+        ContractType = typeof(IRequestProcessingFilter))]
+    public interface IRequestProcessingFilter<TRequest> : IRequestProcessingFilter
+        where TRequest : IRequest
+    {
+    }
+
+In this second example, the request processing filters are exported using the non-generic `IRequestProcessingFilter` contract type, so that all of them can be collected by the composition using the non-generic contract, and later decisions may be taken based on the generic type metadata.
+Additional to the metadata collected by using the MetadataAttributes declaration, Kephas collects also from the service implementations the actual generic types and adds them to the existing composition metadata. The following rules are applies:
+* The actual generic parameter is the metadata value.
+* The adjusted name of the generic parameter is the metadata key. The adjusted name is obtained by stripping the leading “T”, if specified, and appending “Type”, if not already there.
