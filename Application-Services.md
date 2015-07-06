@@ -58,7 +58,7 @@ In case a new service implementation with the same contract is defined and the o
         //...
     }
 
-
+> This is a very powerful feature that allows the replacement of service implementation in a declarative way. A simple case is the replacement of the "Null" services provided by Kephas with real implementations. The "Null" services have always the lowest override priority.
 
 ## Multiple services with the same contract
 If the application service contract should allow multiple registered service implementations, set the AllowMultiple option to true in the contract declaration.
