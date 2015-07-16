@@ -2,13 +2,13 @@ A Kephas application uses internally all kinds of services, built-in and custom 
 
 > Consuming an application service implies using its contract and never its implementation.
 
-# Aims of application services design
+## Aims of application services design
 * Support metadata.
 * Declare the expected behavior at the service contract level, not at the implementation level.
 * Possibility to override a service implementation in a declarative way.
 * Possibility to prioritize the service implementations where a collection of them should be used.
 
-# Steps for defining an application service
+## Steps for defining an application service
 
 1. Define the application service contract and configure it using the `[AppServiceContract]` or `[SharedAppServiceContract]` attributes (Allow multiple: yes/no).
 
@@ -16,8 +16,8 @@ A Kephas application uses internally all kinds of services, built-in and custom 
 
 3. Consume the service.
 
-# Configure the application services
-## Override priorities
+## Configure the application services
+### Override priorities
 
 An override priority is used for services not allowing multiple implementations at the same time, to ensure a deterministic identification of the desired service. The override priority attribute is applied on the service implementation.
 Kephas exposes its default services either with a lowest override priority (for example for null services), or with a low priority (the rest of them), to allow an uncomplicated override, because when an override priority is not provided, the normal value is used in this case.
@@ -69,7 +69,7 @@ Example:
 
 Note: generic application service contracts allow multiple registrations by default, because it is expected that multiple services will be defined with different actual generic type parameters.
 
-## Composition metadata
+### Composition metadata
 Application services may indicate metadata attributes that they use. The following conventions are applied:
 * The attributes must implement `IMetadataValue<TValue>`. The `Value` property will provide the value of the metadata key.
 * The attribute type without the “Attribute” suffix will be the metadata key.
@@ -87,7 +87,7 @@ Example:
     {
     }
 
-## Generic application service contracts
+### Generic application service contracts
 When exposing generic application service contracts, Kephas will export the parts using the generic interface, unless a `ContractType` is specified in the metadata.
 
 Example of generic export contract type:
