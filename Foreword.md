@@ -1,4 +1,3 @@
-#Foreword
 The main challenge the software publisher faces today is the customization: the business solution he offers must match the customer's requirements. And each customer wants to have his problems solved the way he understands to drive his business. Is it possible to manage this situation without having the costs explode? And the answer is yes, it is possible. The software industry must walk the way other industries did, for example automobile industry, and allow each customer to have it his way. This is only possible by giving up manufacturing, and starting building and aggregating smaller solutions into a fully customized product, just like in a factory.
 
 ## Customer needs
