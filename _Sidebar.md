@@ -5,3 +5,5 @@
 [Application Services](https://github.com/quartz-software/kephas/wiki/Application-Services)
 
 [Composition](https://github.com/quartz-software/kephas/wiki/Composition)
+
+[Multidimensional Model](https://github.com/quartz-software/kephas/wiki/Multidimensional-Model)
