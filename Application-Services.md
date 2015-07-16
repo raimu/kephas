@@ -35,6 +35,11 @@ Basically there are two ways to consume these services: first, import the servic
             this.ModelInfoProviders = modelInfoProviders;
             //...
         }
+
+        /// <summary>
+        /// Gets or sets the logger.
+        /// </summary>
+        public ILogger<DefaultModelSpaceProvider> Logger { get; set; }
         
         //...
     }
