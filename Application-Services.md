@@ -13,9 +13,31 @@ A Kephas application uses internally all kinds of services, built-in and custom 
 
 1. Define the application service contract and configure it using the `[AppServiceContract]` or `[SharedAppServiceContract]` attributes (Allow multiple: yes/no).
 
-2. Implement one or more application services based on the contract defined in the step above. Note: for contracts not allowing multiple service implementations, it is a recommended practice to decorate the service implementation with the `[OverridePriority]` attribute.
+2. Implement one or more application services based on the contract defined in the step above. Note: for contracts not allowing multiple service implementations, it is a recommended practice to decorate the service implementation with the `[OverridePriority]` attribute. See more on this feature below.
 
 3. Consume the service.
+
+## Consuming the application services
+Basically there are two ways to consume these services: first, import the services either in the constructor or as public properties, and second, using the composition continer's `GetExport` or `GetExports` methods.
+
+    /// <summary>
+    /// The default implementation of a model space provider.
+    /// </summary>
+    [OverridePriority(Priority.Low)]
+    public class DefaultModelSpaceProvider : IModelSpaceProvider
+    {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DefaultModelSpaceProvider"/> class.
+        /// </summary>
+        /// <param name="modelInfoProviders">The model information providers.</param>
+        public DefaultModelSpaceProvider(ICollection<IModelInfoProvider> modelInfoProviders)
+        {
+            this.ModelInfoProviders = modelInfoProviders;
+            //...
+        }
+        
+        //...
+    }
 
 ## Configure the application services
 ### Override priorities
@@ -29,7 +51,7 @@ Example:
     /// Application service for processing requests.
     /// </summary>
     [SharedAppServiceContract]
-    public interface IRequestProcessor : IAsyncRequestProcessor
+    public interface IRequestProcessor
     {
         /// <summary>
         /// Processes the specified request.
@@ -122,6 +144,20 @@ Example of the non-generic export contract type:
     public interface IRequestProcessingFilter<TRequest> : IRequestProcessingFilter
         where TRequest : IRequest
     {
+    }
+
+Consuming such services is pretty straightforward:
+
+    public class RequestProcessor : IRequestProcessor
+    {
+        public RequestProcessor(IList<IExportFactory<IRequestProcessingFilter, RequestProcessingFilterMetadata>> filterFactories)
+        {
+        }
+        
+        // alternatively, could import the services through the means of a collection property.
+        public IList<IExportFactory<IRequestProcessingFilter, RequestProcessingFilterMetadata>> FilterFactories { get; set; }
+
+        // NOTE: both ways of service injection are illustrated above, for demo purposes. In real life use either of them, but not both at the same time for the same dependency.
     }
 
 In this second example, the request processing filters are exported using the non-generic `IRequestProcessingFilter` contract type, so that all of them can be collected by the composition using the non-generic contract, and later decisions may be taken based on the generic type metadata.
