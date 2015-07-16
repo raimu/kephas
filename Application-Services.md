@@ -169,3 +169,36 @@ In this second example, the request processing filters are exported using the no
 Additional to the metadata collected by using the MetadataAttributes declaration, Kephas collects also from the service implementations the actual generic types and adds them to the existing composition metadata. The following rules are applies:
 * The actual generic parameter is the metadata value.
 * The adjusted name of the generic parameter is the metadata key. The adjusted name is obtained by stripping the leading “T”, if specified, and appending “Type”, if not already there.
+
+### Open generic application service contracts
+A special kind of generic contracts are open generic contracts. The key difference to the regular generic contracts is that the exported contract is not a base non-generic contract, but the generic contract itself, and this is marked through setting the ``AsOpenGeneric`` property to ``true``. Consequently, the exported parts are generic implementations of that generic contract, and the imports are closed generics of it.
+
+Example:
+
+    /// <summary>
+    /// Defines a service contract for a logger associated to a specific service.
+    /// </summary>
+    /// <typeparam name="TService">The type of the service.</typeparam>
+    [SharedAppServiceContract(AsOpenGeneric = true)]
+    public interface ILogger<TService> : ILogger
+    {
+    }
+
+    /// <summary>
+    /// NLog logger for the <typeparamref name="TService"/>.
+    /// </summary>
+    /// <typeparam name="TService">The type of the service.</typeparam>
+    public class NLogger<TService> : ILogger<TService>
+    {
+    }
+
+    /// <summary>
+    /// Model provider based on the .NET runtime and the type system.
+    /// </summary>
+    public class RuntimeModelInfoProvider : IModelInfoProvider
+    {
+        /// <summary>
+        /// Gets or sets the logger.
+        /// </summary>
+        public ILogger<RuntimeModelInfoProvider> Logger { get; set; }
+    }
