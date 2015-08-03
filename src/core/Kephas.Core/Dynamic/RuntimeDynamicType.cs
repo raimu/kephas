@@ -60,7 +60,7 @@ namespace Kephas.Dynamic
         /// <value>
         /// The type.
         /// </value>
-        public Type Type { get; private set; }
+        public Type Type { get; }
 
         /// <summary>
         /// Gets the dynamic properties.
@@ -68,10 +68,7 @@ namespace Kephas.Dynamic
         /// <value>
         /// The dynamic properties.
         /// </value>
-        public IEnumerable<KeyValuePair<string, IDynamicProperty>> DynamicProperties
-        {
-            get { return this.dynamicProperties; }
-        }
+        public IEnumerable<KeyValuePair<string, IDynamicProperty>> DynamicProperties => this.dynamicProperties;
 
         /// <summary>
         /// Gets the dynamic methods.
@@ -241,7 +238,7 @@ namespace Kephas.Dynamic
         /// <returns>A dictionary of runtime dynamic methods.</returns>
         private static IDictionary<string, IList<IDynamicMethod>> CreateDynamicMethods(Type type)
         {
-            var methodInfos = type.GetRuntimeMethods().GroupBy(mi => mi.Name, (name, methods) => new KeyValuePair<string, IList<IDynamicMethod>>(name, methods.Select(mi => (IDynamicMethod)new RuntimeDynamicMethod(mi)).ToList()));
+            var methodInfos = type.GetRuntimeMethods().Where(mi => !mi.IsStatic).GroupBy(mi => mi.Name, (name, methods) => new KeyValuePair<string, IList<IDynamicMethod>>(name, methods.Select(mi => (IDynamicMethod)new RuntimeDynamicMethod(mi)).ToList()));
             return methodInfos.ToDictionary(g => g.Key, g => g.Value);
         }
 
@@ -255,7 +252,7 @@ namespace Kephas.Dynamic
         private static IDictionary<string, IDynamicProperty> CreateDynamicProperties(Type type)
         {
             var dynamicProperties = new Dictionary<string, IDynamicProperty>();
-            var propertyInfos = type.GetRuntimeProperties();
+            var propertyInfos = type.GetRuntimeProperties().Where(p => p.GetMethod != null && !p.GetMethod.IsStatic);
             foreach (var propertyInfo in propertyInfos)
             {
                 var propertyName = propertyInfo.Name;
@@ -290,7 +287,7 @@ namespace Kephas.Dynamic
             {
                 if (throwOnNotFound)
                 {
-                    throw new MemberAccessException(string.Format("Property {0} not found or is not accessible in {1}.", propertyName, this.Type));
+                    throw new MemberAccessException($"Property {propertyName} not found or is not accessible in {this.Type}.");
                 }
 
                 return null;
@@ -314,7 +311,7 @@ namespace Kephas.Dynamic
             {
                 if (throwOnNotFound)
                 {
-                    throw new MemberAccessException(string.Format("Method {0} not found or is not accessible in {1}.", methodName, this.Type));
+                    throw new MemberAccessException($"Method {methodName} not found or is not accessible in {this.Type}.");
                 }
 
                 return null;
@@ -352,14 +349,14 @@ namespace Kephas.Dynamic
 
             if (matchingMethods.Count > 1)
             {
-                throw new AmbiguousMatchException(string.Format("Multiple methods found with name {0} and {1} arguments in {2}.", methodName, argsCount, this.Type));
+                throw new AmbiguousMatchException($"Multiple methods found with name {methodName} and {argsCount} arguments in {this.Type}.");
             }
 
             if (matchingMethods.Count == 0)
             {
                 if (throwOnNotFound)
                 {
-                    throw new MemberAccessException(string.Format("Method {0} with {1} arguments not found or is not accessible in {2}.", methodName, argsCount, this.Type));
+                    throw new MemberAccessException($"Method {methodName} with {argsCount} arguments not found or is not accessible in {this.Type}.");
                 }
 
                 return null;
